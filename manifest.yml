@@ -1,0 +1,4 @@
+---
+applications:
+- name: presalesConsultant
+  command: node bin/bot.js
