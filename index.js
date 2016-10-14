@@ -52,9 +52,12 @@ presalesConsultant.prototype._welcomeMessage = function() {
 };
 
 presalesConsultant.prototype._onMessage = function (message) {
-      if(!this._isFromMyself(message)) {
-      this._replyWithMessage(message);
-    }
+  if(!this._isFromMyself(message)
+    && this._isChannelConversation(message)
+    && this._isChatMessage(message))
+  {
+    this._replyWithMessage(message);
+  }
 
 };
 
@@ -79,7 +82,7 @@ presalesConsultant.prototype._isChatMessage = function (message) {
 
 presalesConsultant.prototype._replyWithMessage = function (message) {
   var self = this;
-  //var reply = "I'm sorry that is not a valid entry";
+  var reply = "I'm sorry that is not a valid entry";
 
 
 
