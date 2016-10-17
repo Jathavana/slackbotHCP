@@ -2,3 +2,5 @@
 applications:
 - name: presalesConsultant
   command: node bin/bot.js
+  memory: 1GB
+  instances: 1

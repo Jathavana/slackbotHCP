@@ -5,6 +5,8 @@ var util = require('util');
 var path = require('path');
 var fs = require('fs');
 var Bot = require('slackbots');
+var http = require('http');
+
 
 
 var presalesConsultant = function Constructor(settings){
@@ -16,6 +18,10 @@ var presalesConsultant = function Constructor(settings){
 util.inherits(presalesConsultant, Bot);
 
 module.exports = presalesConsultant;
+http.createServer(function (req, res) {
+res.writeHead(200, { 'Content-Type': 'text/plain' });
+res.send('it is running\n');
+}).listen(process.env.PORT || 5000);
 
 presalesConsultant.prototype.run = function (){
   presalesConsultant.super_.call(this, this.settings);
@@ -40,6 +46,22 @@ presalesConsultant.prototype._loadBotUser = function() {
 };
 
 presalesConsultant.prototype._welcomeMessage = function() {
+
+  var attachments = {"actions":[
+                        {
+                          "name":"All",
+                          "text":"All",
+                          "type":"button",
+                          "value":"All"
+                        },
+                        {
+                          "name":"All",
+                          "text":"All",
+                          "type":"button",
+                          "value":"All"
+                        }
+                      ]};
+
   this.postMessageToChannel("hcp", 'Please enter one of the following solution coverage' +
   ' areas to ' + 'to see our listings' +
   'presales consultant to help enter:' +
@@ -48,17 +70,16 @@ presalesConsultant.prototype._welcomeMessage = function() {
   '\n Business Objects Cloud' +
   '\n Analytics' +
   '\n HCP' +
-  '\n Hybris', {as_user: true});
+  '\n Hybris', {as_user: true, "attachments": attachments});
 };
 
 presalesConsultant.prototype._onMessage = function (message) {
-  var self = this;
   console.log("Ready to Recieve");
       if(this._isChatMessage(message)
       && this._isChannelConversation(message)
-      && !this.isFromMyself(message)){
+      && !this._isFromMyself(message)){
         console.log("Message Recieved");
-        self._replyWithMessage(message);
+        this._replyWithMessage(message);
       }
 
 };
@@ -93,7 +114,7 @@ presalesConsultant.prototype._replyWithMessage = function (message) {
     reply = reply + "\n HCP: Jathavan Arumugam & Tyler Franks";
     reply = reply + "\n Hybris: Brydon Chan, Jennifer Baron, Lyndsay Tilston, Pablo Hennique";
     reply = reply + "\n Analytics: Michael Pereira, Kevin Lee";
-    reply = reply + "\n Business objects Cloud: Garrett Buckley";
+    reply = reply + "\n Business Objects Cloud: Garrett Buckley";
   }
 
   if (message.text.toLowerCase().indexOf('hcp') > - 1){
@@ -125,5 +146,5 @@ presalesConsultant.prototype._replyWithMessage = function (message) {
   }
 
   var channel = self._getChannelById(message.channel);
-  self.postMessageToChannel(channel.name, reply, {as_user: true});
+  self.postMessageToChannel(channel.name, reply, {as_user: true, color: "#36a64f"});
 };
