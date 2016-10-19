@@ -2,7 +2,7 @@
 
 var presalesConsultant = require('../index');
 
-var token = 'xoxb-92040075648-B1KRv10g596JY90YLx2Dqyum';
+var token = 'xoxb-92040075648-cJaqR3Q6yHpnNaumELFMCMLC';
 var name = process.env.BOT_NAME;
 
 

@@ -47,7 +47,8 @@ presalesConsultant.prototype._loadBotUser = function() {
 
 presalesConsultant.prototype._welcomeMessage = function() {
 
-  var attachments = {"actions":[
+  var attachments = { "text": "Choose an option",
+                      "actions":[
                         {
                           "name":"All",
                           "text":"All",
@@ -55,10 +56,34 @@ presalesConsultant.prototype._welcomeMessage = function() {
                           "value":"All"
                         },
                         {
-                          "name":"All",
-                          "text":"All",
+                          "name":"Manager",
+                          "text":"Manager",
                           "type":"button",
-                          "value":"All"
+                          "value":"Manager"
+                        },
+                        {
+                          "name":"BoC",
+                          "text":"BoC",
+                          "type":"button",
+                          "value":"BoC"
+                        },
+                        {
+                          "name":"Analytics",
+                          "text":"Analytics",
+                          "type":"button",
+                          "value":"Analytics"
+                        },
+                        {
+                          "name":"HCP",
+                          "text":"HCP",
+                          "type":"button",
+                          "value":"HCP"
+                        },
+                        {
+                          "name":"Hybris",
+                          "text":"Hybris",
+                          "type":"button",
+                          "value":"Hybris"
                         }
                       ]};
 
@@ -70,7 +95,7 @@ presalesConsultant.prototype._welcomeMessage = function() {
   '\n Business Objects Cloud' +
   '\n Analytics' +
   '\n HCP' +
-  '\n Hybris', {as_user: true, "attachments": attachments});
+  '\n Hybris', {as_user: true, "attachments": [attachments]});
 };
 
 presalesConsultant.prototype._onMessage = function (message) {
