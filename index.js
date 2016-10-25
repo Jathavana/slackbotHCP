@@ -11,7 +11,7 @@ var http = require('http');
 
 var presalesConsultant = function Constructor(settings){
   this.settings = settings;
-  this.settings.name = this.settings.name || 'presalesconsultant';
+  this.settings.name = this.settings.name || 'hcpbot';
 };
 
 // inherits methods and properties from the Bot constructor
@@ -49,9 +49,9 @@ presalesConsultant.prototype._welcomeMessage = function() {
 
   this.postMessageToChannel("hcp", "Hi, I'm here to help!" +
   ' Here are some sample commands:' +
-  '\n Search Account Etherion' +
+  '\n Search Deyan' +
   '\n What are my top three opportunities' +
-  '\n Search opportunity Big Deal' +
+  '\n Search opportunity Temple of Groom' +
   '\n Help!', {as_user: true});
 };
 
@@ -59,11 +59,9 @@ presalesConsultant.prototype._welcomeMessage = function() {
 
 
 presalesConsultant.prototype._onMessage = function (message) {
-  console.log("Ready to Recieve");
       if(this._isChatMessage(message)
       && this._isChannelConversation(message)
       && !this._isFromMyself(message)){
-        console.log("Message Recieved");
         this._replyWithMessage(message);
       }
 };
@@ -89,12 +87,12 @@ presalesConsultant.prototype._isChatMessage = function (message) {
 
 presalesConsultant.prototype._presales = function(message) {
   var self = this;
-  var reply = "Result:";
   var attachments = {};
+  var reply = "";
   if (message.text.toLowerCase().indexOf('all') > - 1){
     attachments = [{
       "fallback": "Required Fallback",
-      "color:": "good",
+      "color": "#439FE0",
       "pretext": "Management",
       "fields": [
         {
@@ -114,8 +112,8 @@ presalesConsultant.prototype._presales = function(message) {
       },
 
       {
-          "color:": "#36A64F",
-          "pretext": "Hana Cloud Platform",
+          "color": "#439FE0",
+          "pretext": "\nHana Cloud Platform",
           "fallback": "Required Fallback",
           "fields": [
             {
@@ -148,8 +146,8 @@ presalesConsultant.prototype._presales = function(message) {
             }]
         },
         {
-        "pretext": "Hybris",
-        "color:": "good",
+        "pretext": "\nHybris",
+        "color": "#439FE0",
         "fallback": "Required Fallback",
         "fields": [
             {
@@ -212,8 +210,9 @@ presalesConsultant.prototype._presales = function(message) {
             }],
           },
             {
-              "pretext": "Analytics",
+              "pretext": "\nAnalytics",
               "fallback": "Required Fallback",
+              "color":"#439FE0",
               "fields": [
             {
               "title": "Michael Pereira",
@@ -267,8 +266,8 @@ presalesConsultant.prototype._presales = function(message) {
   if (message.text.toLowerCase().indexOf('hcp') > - 1){
     attachments = [{
       "fallback": "Required Fallback",
-      "color:": "good",
-      "pretext": "Hana Cloud Platform",
+      "color": "#439FE0",
+      "pretext": "Here are your Hana Cloud Platform specialists",
       "fields": [
         {
           "title": "Jathavan Arumugam",
@@ -304,8 +303,8 @@ presalesConsultant.prototype._presales = function(message) {
   if (message.text.toLowerCase().indexOf('Manager') > - 1){
     attachments = [{
       "fallback": "Required Fallback",
-      "color:": "good",
-      "pretext": "Management",
+      "color": "#439FE0",
+      "pretext": "Here comes the Boss himself",
       "fields": [
         {
           "title": "Mike Duddy",
@@ -326,9 +325,9 @@ presalesConsultant.prototype._presales = function(message) {
 
   if (message.text.toLowerCase().indexOf('hybris') > - 1){
     attachments = [{
-      "fallback": "Required Fallback",
-      "color:": "good",
-      "pretext": "Hybris",
+      "fallback": "Here are your hybris specialists:",
+      "color": "#439FE0",
+      "pretext": "Here are your hybris specialists:",
       "fields": [
           {
             "title": "Brydon Chan",
@@ -395,8 +394,8 @@ presalesConsultant.prototype._presales = function(message) {
   if (message.text.toLowerCase().indexOf('analytics') > - 1){
     attachments = [{
       "fallback": "Required Fallback",
-      "color:": "good",
-      "pretext": "Analytics",
+      "color": "#439FE0",
+      "pretext": "Here are your Analytics specialists: ",
       "fields": [
         {
           "title": "Michael Pereira",
@@ -451,30 +450,401 @@ presalesConsultant.prototype._presales = function(message) {
   self.postMessageToChannel(channel.name, reply, {as_user: true, attachments: attachments});
 }
 
+presalesConsultant.prototype._opportunity = function (message) {
+  var self = this;
+  var attachments = {};
+  var reply = "";
+
+  if (message.text.toLowerCase().indexOf('opp') > -1){
+    reply = "Here are your top three opportunities in your pipeline."
+    attachments = [{
+      "fallback": "Required Fallback",
+      "color": "good",
+      "pretext": "Opportunity #1",
+      "fields": [
+        {
+          "title": "Opportunity",
+          "value": "Movers not shakers",
+          "short": true
+        },
+        {
+          "title": "Phase",
+          "value": "D",
+          "short": true
+        },
+        {
+          "title": "Closing Quarter",
+          "value": "Q4",
+          "short": true
+        },
+        {
+          "title": "Amount",
+          "value": "$675,000.00",
+          "short": true
+        }]
+      },
+      {
+        "fallback": "Required Fallback",
+        "color": "warning",
+        "pretext": "Opportunity #2",
+        "fields": [
+          {
+            "title": "Opportunity",
+            "value": "Sherri's Berries",
+            "short": true
+          },
+          {
+            "title": "Phase",
+            "value": "E",
+            "short": true
+          },
+          {
+            "title": "Closing Quarter",
+            "value": "Q4",
+            "short": true
+          },
+          {
+            "title": "Amount",
+            "value": "$150,000.00",
+            "short": true
+          }]
+        },
+        {
+          "fallback": "Required Fallback",
+          "color": "good",
+          "colour:": "danger",
+          "pretext": "Opportunity #3",
+          "fields": [
+            {
+              "title": "Opportunity",
+              "value": "Temple of Groom",
+              "short": true
+            },
+            {
+              "title": "Phase",
+              "value": "E",
+              "short": true
+            },
+            {
+              "title": "Closing Quarter",
+              "value": "Q4",
+              "short": true
+            },
+            {
+              "title": "Amount",
+              "value": "$125,000.00",
+              "short": true
+            }]
+          }
+
+
+    ];
+    }
+
+    var channel = self._getChannelById(message.channel);
+    self.postMessageToChannel(channel.name, reply, {as_user: true, attachments:attachments});
+};
+
+presalesConsultant.prototype._search = function (message) {
+  var self = this;
+  var reply = "Sorry we couldn't find anything :sob:";
+  var attachments = {};
+
+  //Search Person
+  if(message.text.toLowerCase().indexOf('deyan') > -1){
+    var reply = "Here are your search results:";
+    //LMAO WHERE U AT HOMIE!?
+    attachments = [{
+      "fallback": "AIN'T NO BACKUP",
+      "color": "#439FE0",
+      "pretext": "Found 1 Deyan Ivanov(s)",
+      "fields": [{
+            "title": "Name",
+            "value": "Deyan Ivanov",
+            "short": true
+          },
+          {
+            "title": "Role",
+            "value": "BoC Account Executive",
+            "short": true
+          },
+          {
+            "title": "Name",
+            "value": "Deyan.Ivanov@sap.com",
+            "short": true
+          },
+          {
+            "title": "Phone",
+            "value": "Deyan.Ivanov@sap.com",
+            "short": true
+          }]
+    }];
+  }
+
+  if(message.text.toLowerCase().indexOf('temple of groom') > -1){
+    //LMAO WHERE U AT HOMIE!?
+    attachments = [
+      {
+      "fallback": "Required Fallback",
+      "color": "good",
+      "colour:": "danger",
+      "pretext": "Found 1 Temple of Groom(s)",
+      "fields": [
+        {
+          "title": "Opportunity",
+          "value": "Temple of Groom",
+          "short": true
+        },
+        {
+          "title": "Phase",
+          "value": "E",
+          "short": true
+        },
+        {
+          "title": "Closing Quarter",
+          "value": "Q4",
+          "short": true
+        },
+        {
+          "title": "Amount",
+          "value": "$125,000.00",
+          "short": true
+        },
+        {
+          "title": "Name",
+          "value": "Deyan Ivanov",
+          "short": true
+        },
+        {
+          "title": "Role",
+          "value": "BoC Account Executive",
+          "short": true
+        },
+        {
+          "title": "VAT",
+          "value": "Garrett Buckley",
+          "short": true
+        },
+        {
+          "title": "Phone",
+          "value": "Garrett.Buckley@sap.com",
+          "short": true
+        }]
+      }];
+  }
+
+  var channel = self._getChannelById(message.channel);
+  self.postMessageToChannel(channel.name, reply, {as_user: true, attachments:attachments});
+};
+
+presalesConsultant.prototype._pipeline = function (message) {
+  var self = this;
+  var reply = "We could not find anything in your pipeline for that quarter. :sob:";
+  var attachments = {};
+
+  if (message.text.toLowerCase().indexOf('q4') > -1){
+    reply = "Here are your the opportunities in your pipeline";
+    attachments = [{
+      "fallback": "Required Fallback",
+      "color": "good",
+      "pretext": "Opportunity #1",
+      "fields": [
+        {
+          "title": "Opportunity",
+          "value": "Movers not shakers",
+          "short": false
+        },
+        {
+          "title": "Phase",
+          "value": "D",
+          "short": true
+        },
+        {
+          "title": "Closing Quarter",
+          "value": "Q4",
+          "short": true
+        },
+        {
+          "title": "Amount",
+          "value": "$675,000.00",
+          "short": true
+        },
+        {
+          "title": "Probability",
+          "value": "95%",
+          "short": true
+        }]
+      },
+      {
+        "fallback": "Required Fallback",
+        "color": "green",
+        "pretext": "Opportunity #2",
+        "fields": [
+          {
+            "title": "Opportunity",
+            "value": "Sherri's Berries",
+            "short": false
+          },
+          {
+            "title": "Phase",
+            "value": "E",
+            "short": true
+          },
+          {
+            "title": "Closing Quarter",
+            "value": "Q4",
+            "short": true
+          },
+          {
+            "title": "Amount",
+            "value": "$150,000.00",
+            "short": true
+          },
+          {
+            "title": "Probability",
+            "value": "75%",
+            "short": true
+          }]
+        },
+        {
+          "fallback": "Required Fallback",
+          "color": "good",
+          "pretext": "Opportunity #3",
+          "fields": [
+            {
+              "title": "Opportunity",
+              "value": "Temple of Groom",
+              "short": false
+            },
+            {
+              "title": "Phase",
+              "value": "E",
+              "short": true
+            },
+            {
+              "title": "Closing Quarter",
+              "value": "Q4",
+              "short": true
+            },
+            {
+              "title": "Amount",
+              "value": "$125,000.00",
+              "short": true
+            },
+            {
+              "title": "Probability",
+              "value": "75%",
+              "short": true
+            }]
+          },
+          {
+            "fallback": "Required Fallback",
+            "color": "warning",
+            "pretext": "Opportunity #4",
+            "fields": [
+              {
+                "title": "Opportunity",
+                "value": "Bits & PC's",
+                "short": false
+              },
+              {
+                "title": "Phase",
+                "value": "E",
+                "short": true
+              },
+              {
+                "title": "Closing Quarter",
+                "value": "Q4",
+                "short": true
+              },
+              {
+                "title": "Amount",
+                "value": "$75,000.00",
+                "short": true
+              },
+              {
+                "title": "Probability",
+                "value": "60%",
+                "short": true
+              }]
+            },
+            {
+              "fallback": "Required Fallback",
+              "color": "danger",
+              "pretext": "Opportunity #5",
+              "fields": [
+                {
+                  "title": "Opportunity",
+                  "value": "Bread Pit",
+                  "short": false
+                },
+                {
+                  "title": "Phase",
+                  "value": "E",
+                  "short": true
+                },
+                {
+                  "title": "Closing Quarter",
+                  "value": "Q4",
+                  "short": true
+                },
+                {
+                  "title": "Amount",
+                  "value": "$55,000.00",
+                  "short": true
+                },
+                {
+                  "title": "Probability",
+                  "value": "35%",
+                  "short": true
+                }]
+              }
+    ];
+    }
+
+    var channel = self._getChannelById(message.channel);
+    self.postMessageToChannel(channel.name, reply, {as_user: true, attachments:attachments});
+};
+
+
+presalesConsultant.prototype._help = function (message) {
+  var self = this;
+
+    var reply = "Other commands: \n Presales All \n Presales Manager \n Presales [Hana Cloud Platform]";
+    reply += "\n \n This app was built with Hana Cloud Platform";
+    var channel = self._getChannelById(message.channel);
+    self.postMessageToChannel(channel.name, reply, {as_user: true, color: "#36a64f"});
+};
 
 presalesConsultant.prototype._replyWithMessage = function (message) {
 
-  /**
-  "Search account for Acme" or "Search Acme in accounts"
-  "Search contact Lisa Smith"
-  "Search opportunity big deal"
-
-  What are my top three opportunities?
-  Pipeline Report
-  Deals closing quarter
-  Win thing
-
-  Presales
-  **/
   var self = this;
   var reply = "I'm sorry that is not a valid entry";
 
   //Send to presales method
   if (message.text.toLowerCase().indexOf('presales') > -1){
-    console.log("Why");
     self._presales(message);
   }
 
-  //hcvar channel = self._getChannelById(message.channel);
-  //self.postMessageToChannel(channel.name, reply, {as_user: true, color: "#36a64f"});
+  //Top opp
+  if (message.text.toLowerCase().indexOf('top') > -1){
+    self._opportunity(message);
+  }
+
+  //Search
+  if (message.text.toLowerCase().indexOf('search') > -1){
+    self._search(message);
+  }
+
+  //Pipeline Report
+  if (message.text.toLowerCase().indexOf('pipeline') > -1){
+    self._pipeline(message);
+  }
+
+  //win thing
+  if (message.text.toLowerCase().indexOf('help') > -1){
+    self._help(message);
+  }
+
+
 };
