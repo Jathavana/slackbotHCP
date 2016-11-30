@@ -1,4 +1,3 @@
-
 'use strict';
 
 var util = require('util');
@@ -6,7 +5,10 @@ var path = require('path');
 var fs = require('fs');
 var Bot = require('slackbots');
 var http = require('http');
-
+var bodyParser = require('body-parser');
+let cfenv = require('cfenv');
+let appEnv = cfenv.getAppEnv();
+let mongoose = require('mongoose');
 
 
 var presalesConsultant = function Constructor(settings){
@@ -37,6 +39,9 @@ presalesConsultant.prototype._onStart = function() {
   this.postMessageToChannel(this.channels[0].name, 'Welcome', {as_user: true});
 };
 
+presalesConsultant.ClassName.prototype.methodName = function () {
+
+};
 
 presalesConsultant.prototype._loadBotUser = function() {
   var self = this;

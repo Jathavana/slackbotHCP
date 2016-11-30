@@ -2,3 +2,6 @@
 applications:
 - name: presalesConsultant
   command: node bin/bot.js
+  memory: 512M
+  services:
+    - mongo-service
