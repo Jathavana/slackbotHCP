@@ -1,0 +1,110 @@
+db.staff.insert([
+{
+  "Name": "John Smith",
+  "Job" : "Sales",
+  "Role": "ABC Account Executive",
+  "Email": "John.Smith@abc.com",
+  "Phone": "604-111-1111"
+},
+{
+  "Name": "Maria Hernandez",
+  "Job" : "Sales",
+  "Role": "ABC Account Executive",
+  "Email": "Maria.Hernandez@abc.com",
+  "Phone": "604-111-1111"
+},
+{
+  "Name": "Ashley Chan",
+  "Job" : "Sales",
+  "Role": "ABC Account Executive",
+  "Email": "Ashley.Chan@abc.com",
+  "Phone": "604-111-1111"
+},
+{
+  "Name": "Raj Gupta",
+  "Job" : "Sales",
+  "Role": "ABC Account Executive",
+  "Email": "Raj.Gupta@abc.com",
+  "Phone": "604-111-1111"
+},
+{
+  "Name": "Peter Tomlinson",
+  "Job" : "Presales",
+  "Role": "Presales Manager",
+  "Phone": "604-222-3333",
+  "Email": "Peter.Tomlinson@abc.com"
+},
+{
+  "Name": "Jane Doe",
+  "Job" : "Presales",
+  "Role": "ABC Platform Specialist",
+  "Phone": "604-333-4444",
+  "Email": "Jane.Doe@abc.com"
+},
+{
+  "Name": "Tyler Pranks",
+  "Job" : "Presales",
+  "Role": "ABC Analytics",
+  "Phone": "604-444-5555",
+  "Email": "Tyler.Pranks@abc.com"
+},
+{
+  "Name": "Michael Scott",
+  "Job" : "Presales",
+  "Role": "ABC EIM Specialist",
+  "Phone": "604-333-4444",
+  "Email": "Michael.Scott@abc.com"
+},
+{
+  "Name": "Ben Parker",
+  "Job" : "Presales",
+  "Role": "ABC E-Commerce Specialist",
+  "Phone": "604-444-5555",
+  "Email": "Ben.Parker@abc.com"
+},
+{
+  "Name": "Bob Dole",
+  "Job" : "Presales",
+  "Role": "ABC Marketing Specialist",
+  "Phone": "604-333-4444",
+  "Email": "Bob.Dole@abc.com"
+}
+])
+
+db.opportunities.insert([
+{
+"Name": "Movers not Shakers",
+"Phase": "D",
+"Closing Quarter": "Q4",
+"Amount": "$675,000.00",
+"Probability": "95%"
+},
+{
+"Name": "Sherri's Berries",
+"Phase": "E",
+"Closing Quarter": "Q4",
+"Amount": "$150,000.00",
+"Probability": "75%"
+},
+{
+"Name": "Temple of Groom",
+"Phase": "E",
+"Closing Quarter": "Q4",
+"Amount": "$125,000.00",
+"Probability": "75%"
+},
+{
+"Name": "Bits & PC's",
+"Phase": "E",
+"Closing Quarter": "Q4",
+"Amount": "$75,000.00",
+"Probability": "60%"
+},
+{
+"Name": "Bread Pit",
+"Phase": "E",
+"Closing Quarter": "Q4",
+"Amount": "$55,000.00",
+"Probability": "55%"
+}
+])

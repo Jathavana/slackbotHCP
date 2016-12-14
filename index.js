@@ -5,13 +5,21 @@ var path = require('path');
 var fs = require('fs');
 var Bot = require('slackbots');
 var http = require('http');
-var bodyParser = require('body-parser');
 let cfenv = require('cfenv');
 let appEnv = cfenv.getAppEnv();
 let mongoose = require('mongoose');
 
 
-var presalesConsultant = function Constructor(settings){
+
+//Connect to MongoDB
+require('./mongo-connect')(appEnv);
+
+//Models
+var staff = require('./db/models/staffModel');
+var opportunity = require('./db/models/opportunityModel');
+
+var presalesConsultant = function Constructor(settings)
+{
   this.settings = settings;
   this.settings.name = this.settings.name || 'hcpbot';
 };
@@ -20,6 +28,8 @@ var presalesConsultant = function Constructor(settings){
 util.inherits(presalesConsultant, Bot);
 
 module.exports = presalesConsultant;
+
+//Create Server
 http.createServer(function (req, res) {
 res.writeHead(200, { 'Content-Type': 'text/plain' });
 res.send('it is running\n');
@@ -27,7 +37,6 @@ res.send('it is running\n');
 
 presalesConsultant.prototype.run = function (){
   presalesConsultant.super_.call(this, this.settings);
-
   this.on('start', this._onStart);
   this.on('message', this._onMessage);
 };
@@ -39,9 +48,6 @@ presalesConsultant.prototype._onStart = function() {
   this.postMessageToChannel(this.channels[0].name, 'Welcome', {as_user: true});
 };
 
-presalesConsultant.ClassName.prototype.methodName = function () {
-
-};
 
 presalesConsultant.prototype._loadBotUser = function() {
   var self = this;
@@ -54,13 +60,11 @@ presalesConsultant.prototype._welcomeMessage = function() {
 
   this.postMessageToChannel("hcp", "Hi, I'm here to help!" +
   ' Here are some sample commands:' +
-  '\n Search Deyan' +
-  '\n What are my top three opportunities' +
-  '\n Search opportunity Temple of Groom' +
-  '\n Help!', {as_user: true});
+  '\n hcpbot search John Smith' +
+  '\n hcpbot What are my top three opportunities' +
+  '\n hcpbot Search opportunity Temple of Groom' +
+  '\n hcpbot Help!', {as_user: true});
 };
-
-
 
 
 presalesConsultant.prototype._onMessage = function (message) {
@@ -90,11 +94,84 @@ presalesConsultant.prototype._isChatMessage = function (message) {
     return message.type === 'message' && Boolean(message.text);
 };
 
+
+presalesConsultant.prototype._response = function (message, queryObject){
+  var self = this;
+  var reply = "";
+  var channel = message.channel.name;
+
+  staff.find(queryObject, '-_id Name Phone Email Role', function(err, salesResult) {
+    if (err) return console.error(err);
+    var number = salesResult.length;
+    if (number == 0) return null;
+
+    var attachments = self._responseBuilder(salesResult, number, channel)
+
+    //Push the fields to the chat
+    var channel = self._getChannelById(message.channel);
+    self.postMessageToChannel(channel.name, reply, {as_user: true, attachments:attachments});
+  });
+
+  opportunity.find(queryObject, '-_id', function(err, opporturtunityResult){
+    if (err) return console.error(err);
+    var number = opporturtunityResult.length;
+    if (number == 0) return null;
+
+
+    var attachments = self._responseBuilder(opporturtunityResult, number, channel)
+
+    //Push the fields to the chat
+    var channel = self._getChannelById(message.channel);
+    self.postMessageToChannel(channel.name, reply, {as_user: true, attachments:attachments});
+  });
+
+}
+
+presalesConsultant.prototype._responseBuilder = function(queryResult, number, channel) {
+  var number = queryResult.length;
+  var attachments = {};
+
+  attachments = [{
+    "fallback": "None",
+    "color": "#439FE0",
+    "pretext": `Found (${number}) result(s)`,
+    "fields": []
+  }];
+
+  //Go through each Search Result
+  queryResult.forEach(function(result) {
+    //Convert Mongoose Object to JSON
+    result = result.toJSON();
+
+    //Traverse through all the properties in the Object and create a field
+    for (var key in result) {
+      if(result.hasOwnProperty(key)){
+        var field = {
+          "title": `${key}`,
+          "value": `${result[key]}`,
+          "short":  true,
+        }
+        
+        attachments[0].fields.push(field);
+      }
+    }
+  });
+
+  console.log(attachments);
+  return attachments;
+}
+
 presalesConsultant.prototype._presales = function(message) {
   var self = this;
   var attachments = {};
   var reply = "";
+
+
   if (message.text.toLowerCase().indexOf('all') > - 1){
+    var queryObject = {};
+    queryObject["Job"] = "Presales";
+    this._response(message, queryObject);
+    /**
     attachments = [{
       "fallback": "Required Fallback",
       "color": "#439FE0",
@@ -263,11 +340,11 @@ presalesConsultant.prototype._presales = function(message) {
             }
           ],
           "color:": "#36A64F"
-      }]
+      }]**/
 
   };
 
-
+/**
   if (message.text.toLowerCase().indexOf('hcp') > - 1){
     attachments = [{
       "fallback": "Required Fallback",
@@ -450,7 +527,7 @@ presalesConsultant.prototype._presales = function(message) {
   if (message.text.toLowerCase().indexOf('bleed') > - 1){
     reply = "yes";
   }
-
+**/
   var channel = self._getChannelById(message.channel);
   self.postMessageToChannel(channel.name, reply, {as_user: true, attachments: attachments});
 }
@@ -541,8 +618,6 @@ presalesConsultant.prototype._opportunity = function (message) {
               "short": true
             }]
           }
-
-
     ];
     }
 
@@ -551,40 +626,17 @@ presalesConsultant.prototype._opportunity = function (message) {
 };
 
 presalesConsultant.prototype._search = function (message) {
-  var self = this;
-  var reply = "Sorry we couldn't find anything :sob:";
   var attachments = {};
+  var query = message.text;
+  var reply = "";
+  var searchString = query.slice(13);
+  searchString = searchString.trim();
 
-  //Search Person
-  if(message.text.toLowerCase().indexOf('deyan') > -1){
-    var reply = "Here are your search results:";
-    //LMAO WHERE U AT HOMIE!?
-    attachments = [{
-      "fallback": "AIN'T NO BACKUP",
-      "color": "#439FE0",
-      "pretext": "Found 1 Deyan Ivanov(s)",
-      "fields": [{
-            "title": "Name",
-            "value": "Deyan Ivanov",
-            "short": true
-          },
-          {
-            "title": "Role",
-            "value": "BoC Account Executive",
-            "short": true
-          },
-          {
-            "title": "Name",
-            "value": "Deyan.Ivanov@sap.com",
-            "short": true
-          },
-          {
-            "title": "Phone",
-            "value": "Deyan.Ivanov@sap.com",
-            "short": true
-          }]
-    }];
-  }
+
+  var queryObject = {}
+  queryObject["Name"] = searchString;
+  this._response(message, queryObject);
+
 
   if(message.text.toLowerCase().indexOf('temple of groom') > -1){
     //LMAO WHERE U AT HOMIE!?
@@ -638,8 +690,8 @@ presalesConsultant.prototype._search = function (message) {
       }];
   }
 
-  var channel = self._getChannelById(message.channel);
-  self.postMessageToChannel(channel.name, reply, {as_user: true, attachments:attachments});
+  //var channel = self._getChannelById(message.channel);
+  //self.postMessageToChannel(channel.name, reply, {as_user: true, attachments:attachments});
 };
 
 presalesConsultant.prototype._pipeline = function (message) {
@@ -806,9 +858,6 @@ presalesConsultant.prototype._pipeline = function (message) {
               }
     ];
     }
-
-    var channel = self._getChannelById(message.channel);
-    self.postMessageToChannel(channel.name, reply, {as_user: true, attachments:attachments});
 };
 
 
@@ -827,27 +876,27 @@ presalesConsultant.prototype._replyWithMessage = function (message) {
   var reply = "I'm sorry that is not a valid entry";
 
   //Send to presales method
-  if (message.text.toLowerCase().indexOf('presales') > -1){
+  if (message.text.toLowerCase().indexOf('hcpbot presales') > -1){
     self._presales(message);
   }
 
   //Top opp
-  if (message.text.toLowerCase().indexOf('top') > -1){
+  if (message.text.toLowerCase().indexOf('hcpbot top') > -1){
     self._opportunity(message);
   }
 
   //Search
-  if (message.text.toLowerCase().indexOf('search') > -1){
+  if (message.text.toLowerCase().indexOf('hcpbot search') > -1){
     self._search(message);
   }
 
   //Pipeline Report
-  if (message.text.toLowerCase().indexOf('pipeline') > -1){
+  if (message.text.toLowerCase().indexOf('hcpbot pipeline') > -1){
     self._pipeline(message);
   }
 
   //win thing
-  if (message.text.toLowerCase().indexOf('help') > -1){
+  if (message.text.toLowerCase().indexOf('hcpbot help') > -1){
     self._help(message);
   }
 
